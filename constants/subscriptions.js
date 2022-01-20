@@ -1,0 +1,9 @@
+const PIN_ADDED = 'PIN_ADDED';
+const PIN_DELETED = 'PIN_DELETED';
+const PIN_UPDATED = 'PIN_UPDATED';
+
+module.exports = {
+  PIN_ADDED,
+  PIN_DELETED,
+  PIN_UPDATED
+};
