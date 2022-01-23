@@ -1,5 +1,8 @@
 const mongoose = require('mongoose');
 
+const slug = require('slug');
+const shortId = require('shortid');
+
 const PinSchema = mongoose.Schema(
   {
     title: String,
@@ -74,5 +77,17 @@ const PinSchema = mongoose.Schema(
   },
   { timestamps: true }
 );
+
+PinSchema.pre('save', function (next) {
+  const pin = this;
+
+  if (pin.isNew) {
+    const url = slug(pin.title);
+    pin.slug = `${url}-${shortId.generate()}`;
+    next();
+  } else {
+    next();
+  }
+});
 
 module.exports = mongoose.model('Pin', PinSchema);
