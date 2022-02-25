@@ -5,15 +5,20 @@ module.exports = gql`
 
   type User {
     _id: ID
-    name: String
     email: String
+    password: String
+    name: String
+    userName: String
+    profileUrl: String
+    role: String
     picture: String
     createdAt: String
+    updatedAt: String
   }
 
   type Pin {
     _id: ID
-    
+
     title: String
     content: String
     phone: String
@@ -41,7 +46,7 @@ module.exports = gql`
     latitude: Float
     longitude: Float
     createdAt: String
-    
+
     author: User
     staff: [User]
     attendees: [User]
@@ -85,6 +90,25 @@ module.exports = gql`
     country: String
   }
 
+  input RegisterInput {
+    email: String
+    password: String
+    name: String
+  }
+
+  input LoginInput {
+    email: String
+    password: String
+  }
+
+  input ForgotPasswordInput {
+    email: String
+  }
+
+  input ResetPasswordInput {
+    code: String
+  }
+
   type Location {
     address: String
     city: String
@@ -106,6 +130,10 @@ module.exports = gql`
   }
 
   type Mutation {
+    register(input: RegisterInput!): User
+    login(input: LoginInput!): User
+    forgotPassword(input: ForgotPasswordInput!): User
+    resetPassword(input: ResetPasswordInput!): User
     createPin(input: CreatePinInput!): Pin
     deletePin(pinId: ID!): Pin
     createComment(pinId: ID!, text: String!): Pin

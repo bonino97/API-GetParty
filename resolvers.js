@@ -1,9 +1,5 @@
 const { AuthenticationError, PubSub } = require('apollo-server');
-const {
-  PIN_ADDED,
-  PIN_DELETED,
-  PIN_UPDATED,
-} = require('./constants/subscriptions');
+const { PIN_ADDED, PIN_DELETED, PIN_UPDATED } = require('./constants/subscriptions');
 
 const Pin = require('./models/Pin');
 const pubsub = new PubSub();
@@ -17,10 +13,7 @@ module.exports = {
   Query: {
     me: authenticated((root, args, ctx) => ctx.currentUser),
     getPins: async (root, args, ctx) => {
-      const pins = await Pin.find({})
-        .populate('author')
-        .populate('comments.author')
-        .sort({ createdAt: -1 });
+      const pins = await Pin.find({}).populate('author').populate('comments.author').sort({ createdAt: -1 });
       return pins;
     },
     getPin: async (root, args, ctx) => {
@@ -30,6 +23,10 @@ module.exports = {
     },
   },
   Mutation: {
+    register: (root, args, ctx) => {},
+    login: (root, args, ctx) => {},
+    forgotPassword: (root, args, ctx) => {},
+    resetPassword: (root, args, ctx) => {},
     createPin: authenticated(async (root, args, ctx) => {
       try {
         const newPin = await new Pin({
@@ -58,11 +55,7 @@ module.exports = {
     createComment: authenticated(async (root, args, ctx) => {
       const newComment = { text: args.text, author: ctx.currentUser._id };
       const pinId = args.pinId;
-      const pinUpdated = await Pin.findByIdAndUpdate(
-        pinId,
-        { $push: { comments: newComment } },
-        { new: true }
-      )
+      const pinUpdated = await Pin.findByIdAndUpdate(pinId, { $push: { comments: newComment } }, { new: true })
         .populate('author')
         .populate('comments.author');
       pubsub.publish(PIN_UPDATED, { pinUpdated });
