@@ -23,7 +23,18 @@ module.exports = {
     },
   },
   Mutation: {
-    register: (root, args, ctx) => {},
+    register: (root, args, ctx) => {
+      try {
+        const user = {};
+        console.log(args.input);
+        // const user = await new User({
+        //   ...args.input,
+        // }).save();
+        return user;
+      } catch (error) {
+        throw new Error(error);
+      }
+    },
     login: (root, args, ctx) => {},
     forgotPassword: (root, args, ctx) => {},
     resetPassword: (root, args, ctx) => {},

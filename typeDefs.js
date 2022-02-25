@@ -94,6 +94,7 @@ module.exports = gql`
     email: String
     password: String
     name: String
+    termsAndConditions: Boolean
   }
 
   input LoginInput {
