@@ -16,7 +16,6 @@ const pubsub = new PubSub();
 const SALT_ROUNDS = 10;
 
 const authenticated = (next) => (root, args, ctx, info) => {
-  console.log(ctx);
   if (!ctx.currentUser) throw new AuthenticationError('You must be logged in');
   return next(root, args, ctx, info);
 };
