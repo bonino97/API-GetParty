@@ -29,7 +29,21 @@ module.exports = {
         const user = await new User({
           ...args.input,
           isActive: false,
+          token: '',
         }).save();
+        // Enviar Mail con Token.
+        return user;
+      } catch (error) {
+        if (error && error.code === 11000) {
+          throw new Error('User with email already exists.');
+        }
+        throw new Error(error);
+      }
+    },
+    confirmAccount: async (root, args, ctx) => {
+      try {
+        const token = args.input.token;
+        const user = await User.findOneAndUpdate({ token }, { isActive: true, token: '' });
         return user;
       } catch (error) {
         if (error && error.code === 11000) {

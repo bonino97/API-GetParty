@@ -107,7 +107,11 @@ module.exports = gql`
   }
 
   input ResetPasswordInput {
-    code: String
+    code: Float
+  }
+
+  input ConfirmAccountInput {
+    token: String
   }
 
   type Location {
@@ -133,6 +137,7 @@ module.exports = gql`
   type Mutation {
     register(input: RegisterInput!): User
     login(input: LoginInput!): User
+    confirmAccount(input: ConfirmAccountInput!): User
     forgotPassword(input: ForgotPasswordInput!): User
     resetPassword(input: ResetPasswordInput!): User
     createPin(input: CreatePinInput!): Pin
