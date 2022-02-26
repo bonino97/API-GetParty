@@ -6,7 +6,7 @@ const client = new OAuth2Client(process.env.OAUTH_CLIENT_ID);
 exports.findOrCreateUser = async (token) => {
   const googleUser = await verifyGoogleAuthToken(token);
   let user = await checkIfUserExists(googleUser?.email);
-  if (user && user?.authBy === 'JWT') await user.updateOne({ authBy: 'GOOGLE', picture: googleUser?.picture });
+  if (user && user?.authBy === 'JWT') await user.updateOne({ authBy: 'GOOGLE', picture: googleUser?.picture }, { new: true });
   return user ? user : createNewUser(googleUser);
 };
 
