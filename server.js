@@ -29,6 +29,7 @@ const server = new ApolloServer({
 
     try {
       authToken = req?.headers?.authorization;
+
       const tokenUser = await getJWTData(authToken);
 
       if (tokenUser) {

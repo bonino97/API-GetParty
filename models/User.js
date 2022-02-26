@@ -44,16 +44,14 @@ const UserSchema = mongoose.Schema(
     authBy: String,
     code: Number,
     token: String,
+    jwt: String,
   },
   { timestamps: true }
 );
 
 UserSchema.pre('save', async function (next) {
-  const SALT_ROUNDS = 10;
   const user = this;
   if (user.isNew) {
-    const password = await bcrypt.hash(user.password, SALT_ROUNDS);
-    user.password = password;
     const url = slug(user.name);
     user.profileUrl = `${url}-${shortId.generate()}`;
     next();

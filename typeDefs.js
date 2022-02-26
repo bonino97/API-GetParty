@@ -13,6 +13,7 @@ module.exports = gql`
     instagramUrl: String
     role: String
     token: String
+    jwt: String
     authBy: String
     picture: String
     isActive: Boolean

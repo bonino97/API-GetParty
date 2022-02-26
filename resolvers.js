@@ -13,6 +13,8 @@ const User = require('./models/User');
 
 const pubsub = new PubSub();
 
+const SALT_ROUNDS = 10;
+
 const authenticated = (next) => (root, args, ctx, info) => {
   console.log(ctx);
   if (!ctx.currentUser) throw new AuthenticationError('You must be logged in');
@@ -35,10 +37,12 @@ module.exports = {
   Mutation: {
     register: async (root, args, ctx) => {
       try {
+        const password = await bcrypt.hash(args?.input?.password, SALT_ROUNDS);
         const user = await new User({
           ...args.input,
           token: uuid(),
           authBy: 'JWT',
+          password,
         }).save();
         await sendMail(confirmAccountTemplate(user));
         return user;
@@ -66,10 +70,9 @@ module.exports = {
         if (!user) throw new Error('Please, confirm your account.');
         const compare = bcrypt.compareSync(password, user?.password);
         if (!compare) throw new Error('Incorrect password, try again, or sign in with google.');
-        const token = await signJWTAsync(user);
-        if (!token) throw new Error('An error ocurred authenticating user.');
-        await user.updateOne({ token }, { new: true });
-
+        const jwt = await signJWTAsync(user);
+        if (!jwt) throw new Error('An error ocurred authenticating user.');
+        await user.updateOne({ jwt, authBy: 'JWT' }, { new: true });
         return user;
       } catch (error) {
         throw new Error(error);
