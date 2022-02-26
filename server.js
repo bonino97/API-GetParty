@@ -7,6 +7,7 @@ const resolvers = require('./resolvers');
 const { findOrCreateUser } = require('./controllers/userController');
 
 const config = require('./config/config');
+const getJWTData = require('./functions/getJWT');
 
 require('dotenv').config();
 
@@ -28,8 +29,18 @@ const server = new ApolloServer({
 
     try {
       authToken = req?.headers?.authorization;
+      const tokenUser = await getJWTData(authToken);
+
+      if (tokenUser) {
+        currentUser = await getJWTData(authToken);
+        console.log(currentUser);
+        return { currentUser };
+      }
+
       if (authToken) {
         currentUser = await findOrCreateUser(authToken);
+        console.log(currentUser);
+        return { currentUser };
       }
     } catch (error) {
       console.error(error);

@@ -50,7 +50,6 @@ module.exports = {
     confirmAccount: async (root, args, ctx) => {
       try {
         const { token } = args.input;
-        console.log(token);
         const user = await User.findOneAndUpdate({ token }, { isActive: true, token: '' }, { new: true });
         if (!user) throw new Error('Invalid token.');
         return user;
@@ -68,7 +67,7 @@ module.exports = {
         if (!compare) throw new Error('Incorrect password, try again, or sign in with google.');
         const token = await signJWTAsync(user);
         if (!token) throw new Error('An error ocurred authenticating user.');
-        await user.update({ token }, { new: true });
+        await user.updateOne({ token }, { new: true });
 
         return user;
       } catch (error) {
