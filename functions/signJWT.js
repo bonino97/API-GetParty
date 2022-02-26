@@ -25,7 +25,6 @@ module.exports = signJWTAsync = async (user) => {
         expiresIn: expirationTimeInSeconds,
       }
     );
-    console.log(value);
     return value;
   } catch (error) {
     logging.error(NAMESPACE, error.message, error);

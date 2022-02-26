@@ -33,13 +33,11 @@ const server = new ApolloServer({
 
       if (tokenUser) {
         currentUser = await getJWTData(authToken);
-        console.log(currentUser);
         return { currentUser };
       }
 
       if (authToken) {
         currentUser = await findOrCreateUser(authToken);
-        console.log(currentUser);
         return { currentUser };
       }
     } catch (error) {
