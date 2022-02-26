@@ -5,7 +5,7 @@ const client = new OAuth2Client(process.env.OAUTH_CLIENT_ID);
 
 exports.findOrCreateUser = async (token) => {
   const googleUser = await verifyGoogleAuthToken(token);
-  const user = await checkIfUserExists(googleUser?.email);
+  let user = await checkIfUserExists(googleUser?.email);
   return user ? user : createNewUser(googleUser);
 };
 
@@ -23,12 +23,16 @@ const verifyGoogleAuthToken = async (idToken) => {
   }
 };
 
-const checkIfUserExists = async (email) => await User.findOne({ email }).exec();
+const checkIfUserExists = async (email) => {
+  const user = await User.findOne({ email }).exec();
+  if (user.authBy === 'JWT') await user.updateOne({ authBy: 'GOOGLE' });
+  return user;
+};
 
 const createNewUser = async (googleUser) => {
   try {
     const { name, email, picture } = googleUser;
-    const user = { name, email, picture };
+    const user = { name, email, picture, authBy: 'GOOGLE' };
     return new User(user).save();
   } catch (error) {
     console.error(error);

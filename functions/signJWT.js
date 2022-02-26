@@ -17,6 +17,7 @@ module.exports = signJWTAsync = async (user) => {
         email: user?.email,
         name: user?.name,
         role: user?.role,
+        authBy: user?.authBy
       },
       config?.server?.token?.secret,
       {

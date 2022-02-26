@@ -14,6 +14,7 @@ const User = require('./models/User');
 const pubsub = new PubSub();
 
 const authenticated = (next) => (root, args, ctx, info) => {
+  console.log(ctx);
   if (!ctx.currentUser) throw new AuthenticationError('You must be logged in');
   return next(root, args, ctx, info);
 };
@@ -37,6 +38,7 @@ module.exports = {
         const user = await new User({
           ...args.input,
           token: uuid(),
+          authBy: 'JWT',
         }).save();
         await sendMail(confirmAccountTemplate(user));
         return user;
@@ -60,9 +62,8 @@ module.exports = {
     login: async (root, args, ctx) => {
       try {
         const { email, password } = args.input;
-        const user = await User.findOne({ email });
-
-        if (!user) throw new Error('Email not found, sign in with google.');
+        const user = await User.findOne({ email, isActive: true });
+        if (!user) throw new Error('Please, confirm your account.');
         const compare = bcrypt.compareSync(password, user?.password);
         if (!compare) throw new Error('Incorrect password, try again, or sign in with google.');
         const token = await signJWTAsync(user);
