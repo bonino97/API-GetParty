@@ -30,6 +30,7 @@ const MONGO = {
 
 const SERVER_HOSTNAME = process.env.SERVER_HOSTNAME || 'localhost';
 const PORT = process.env.PORT || 4000;
+const FRONT_HOSTNAME = process.env.FRONT_HOSTNAME || 3000;
 
 const SERVER_TOKEN_EXPIRETIME = process.env.SERVER_TOKEN_EXPIRETIME || 21600;
 const SERVER_TOKEN_ISSUER = process.env.SERVER_TOKEN_ISSUER || 'jwt-issuer';
@@ -37,6 +38,7 @@ const SERVER_TOKEN_SECRET = process.env.SERVER_TOKEN_SECRET || 'jwt-3ncrypt3d-p4
 
 const SERVER = {
   hostname: SERVER_HOSTNAME,
+  front_hostname: FRONT_HOSTNAME,
   port: PORT,
   token: {
     expireTime: SERVER_TOKEN_EXPIRETIME,
