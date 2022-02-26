@@ -2,11 +2,12 @@ const mongoose = require('mongoose');
 
 const slug = require('slug');
 const shortId = require('shortid');
+const bcrypt = require('bcryptjs');
 
 const UserSchema = mongoose.Schema(
   {
     email: { type: String, required: 'Email required.', trim: true, unique: true, lowercase: true },
-    password: { type: String, required: 'Password required.', trim: true },
+    password: { type: String, trim: true },
     name: {
       type: String,
       trim: true,
@@ -44,10 +45,18 @@ const UserSchema = mongoose.Schema(
   { timestamps: true }
 );
 
-UserSchema.pre('save', (user, next) => {
-  const url = slug(user.name);
-  user.profileUrl = user.profileUrl ? user.profileUrl : `${url}-${shortId.generate()}`;
-  next();
+UserSchema.pre('save', async function (next) {
+  const SALT_ROUNDS = 10;
+  const user = this;
+  if (user.isNew) {
+    const password = await bcrypt.hash(user.password, SALT_ROUNDS);
+    user.password = password;
+    const url = slug(user.name);
+    user.profileUrl = `${url}-${shortId.generate()}`;
+    next();
+  } else {
+    next();
+  }
 });
 
 module.exports = mongoose.model('User', UserSchema);

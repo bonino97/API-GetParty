@@ -2,6 +2,7 @@ const { AuthenticationError, PubSub } = require('apollo-server');
 const { PIN_ADDED, PIN_DELETED, PIN_UPDATED } = require('./constants/subscriptions');
 
 const Pin = require('./models/Pin');
+const User = require('./models/User');
 const pubsub = new PubSub();
 
 const authenticated = (next) => (root, args, ctx, info) => {
@@ -23,21 +24,23 @@ module.exports = {
     },
   },
   Mutation: {
-    register: (root, args, ctx) => {
+    register: async (root, args, ctx) => {
       try {
-        const user = {};
-        console.log(args.input);
-        // const user = await new User({
-        //   ...args.input,
-        // }).save();
+        const user = await new User({
+          ...args.input,
+          isActive: false,
+        }).save();
         return user;
       } catch (error) {
+        if (error && error.code === 11000) {
+          throw new Error('User with email already exists.');
+        }
         throw new Error(error);
       }
     },
-    login: (root, args, ctx) => {},
-    forgotPassword: (root, args, ctx) => {},
-    resetPassword: (root, args, ctx) => {},
+    login: async (root, args, ctx) => {},
+    forgotPassword: async (root, args, ctx) => {},
+    resetPassword: async (root, args, ctx) => {},
     createPin: authenticated(async (root, args, ctx) => {
       try {
         const newPin = await new Pin({
@@ -49,6 +52,7 @@ module.exports = {
         pubsub.publish(PIN_ADDED, { pinAdded });
         return pinAdded;
       } catch (error) {
+        console.error(error);
         throw new Error(error);
       }
     }),
