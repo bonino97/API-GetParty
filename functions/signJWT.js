@@ -1,7 +1,8 @@
 const jwt = require('jsonwebtoken');
 const config = require('../config/config');
+const logging = require('../config/logging');
 
-const signJWTAsync = async (user) => {
+module.exports = signJWTAsync = async (user) => {
   //   const timeSinceEpoch = new Date().getTime();
   //   const expirationTime = timeSinceEpoch + Number(config?.server?.token.expireTime) * 100000;
   //   const expirationTimeInSeconds = Math.floor(expirationTime / 1000);
@@ -11,8 +12,7 @@ const signJWTAsync = async (user) => {
       {
         id: user?._id,
         email: user?.email,
-        firstName: user?.firstName,
-        lastName: user?.lastName,
+        name: user?.name,
         role: user?.role,
       },
       config?.server?.token?.secret,
@@ -25,10 +25,7 @@ const signJWTAsync = async (user) => {
 
     return value;
   } catch (error) {
-    console.error(error);
     logging.error(NAMESPACE, error.message, error);
     return error;
   }
 };
-
-export default signJWTAsync;

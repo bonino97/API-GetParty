@@ -31,6 +31,7 @@ const UserSchema = mongoose.Schema(
     role: {
       type: String,
       trim: true,
+      default: 'MEMBER',
     },
     isActive: {
       type: Boolean,
@@ -40,8 +41,9 @@ const UserSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    authBy: String,
     code: Number,
-    token: String
+    token: String,
   },
   { timestamps: true }
 );

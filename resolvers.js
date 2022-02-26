@@ -1,11 +1,16 @@
 const { AuthenticationError, PubSub } = require('apollo-server');
-const { PIN_ADDED, PIN_DELETED, PIN_UPDATED } = require('./constants/subscriptions');
-const confirmAccountTemplate = require('./handlers/confirmAccount');
-const sendMail = require('./config/email');
 const { v4: uuid } = require('uuid');
+const bcrypt = require('bcryptjs');
+
+const { PIN_ADDED, PIN_DELETED, PIN_UPDATED } = require('./constants/subscriptions');
+
+const sendMail = require('./config/email');
+const signJWTAsync = require('./functions/signJWT');
+const confirmAccountTemplate = require('./handlers/confirmAccount');
 
 const Pin = require('./models/Pin');
 const User = require('./models/User');
+
 const pubsub = new PubSub();
 
 const authenticated = (next) => (root, args, ctx, info) => {
@@ -31,7 +36,6 @@ module.exports = {
       try {
         const user = await new User({
           ...args.input,
-          isActive: false,
           token: uuid(),
         }).save();
         await sendMail(confirmAccountTemplate(user));
@@ -54,7 +58,23 @@ module.exports = {
         throw new Error(error);
       }
     },
-    login: async (root, args, ctx) => {},
+    login: async (root, args, ctx) => {
+      try {
+        const { email, password } = args.input;
+        const user = await User.findOne({ email });
+
+        if (!user) throw new Error('Email not found, sign in with google.');
+        const compare = bcrypt.compareSync(password, user?.password);
+        if (!compare) throw new Error('Incorrect password, try again, or sign in with google.');
+        const token = await signJWTAsync(user);
+        if (!token) throw new Error('An error ocurred authenticating user.');
+        await user.update({ token }, { new: true });
+
+        return user;
+      } catch (error) {
+        throw new Error(error);
+      }
+    },
     forgotPassword: async (root, args, ctx) => {},
     resetPassword: async (root, args, ctx) => {},
     createPin: authenticated(async (root, args, ctx) => {

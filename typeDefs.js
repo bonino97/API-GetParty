@@ -10,8 +10,12 @@ module.exports = gql`
     name: String
     userName: String
     profileUrl: String
+    instagramUrl: String
     role: String
+    token: String
     picture: String
+    isActive: Boolean
+    termsAndConditions: Boolean
     createdAt: String
     updatedAt: String
   }

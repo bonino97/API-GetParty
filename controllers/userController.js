@@ -13,9 +13,8 @@ exports.findOrCreateUser = async (token) => {
 
     const authUser = await verifyAuthToken(token);
     if (authUser) {
-      console.log(authUser);
       const user = await checkIfUserExists(authUser?.email);
-      return user ? user : createNewUser(authUser);
+      return user;
     }
   } catch (error) {
     console.error(error);
