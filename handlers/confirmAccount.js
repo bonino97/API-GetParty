@@ -13,26 +13,27 @@ module.exports = confirmAccountTemplate = (user) => {
               <table style="width: 650px; margin: 0 auto; margin-bottom: 30px">
                 <tbody>
                   <tr>
-                    <td><img src="../assets/images/cuba-logo1.png" alt=""></td>
+                    <td><img src="" alt=""></td>
                   </tr>
                 </tbody>
               </table>
-              <table style="width: 650px; margin: 0 auto; background-color: #fff; border-radius: 8px">
+              <table style="display: flex; width: 650px; margin: 0 auto; background-color: #fff; border-radius: 8px">
                 <tbody>
                   <tr>
                     <td style="padding: 30px">
                     <h1 style="
                     font-family: Poppins, sans-serif;
-                    color: #7366ff;
+                    color: #FEBE3E;
                     font-weight: bolder;
                     "> 
-                    Recruiter Work!
+                    Welcome to Get Party!
                     </h1> 
-                      <p style="font-family: Poppins, sans-serif;">Hi There,</p>
-                      <p style="font-family: Poppins, sans-serif;">Thank you very much for joining us!</p>
-                      <div class="text-center"><a href="${url}" style="padding: 10px; background-color: #7366ff; color: #fff; display: inline-block; border-radius: 4px; margin-bottom: 18px; font-family: Poppins, sans-serif;">CONFIRM ACCOUNT</a></div>
-                      <p style="font-family: Poppins, sans-serif;">Please click Confirm Account. To validate your account.</p>
-                      <p style="margin-bottom: 0; font-family: Poppins, sans-serif;">Good luck!</p>
+                    <p style="font-family: Poppins, sans-serif;">Click, "CONFIRM MY EMAIL" to validate your account. </p>
+                    <div class="text-center">
+                      <a href="${url}" style="padding: 10px; background-color: #FD991B; color: #fff; display: inline-block; border-radius: 4px; margin-bottom: 18px; text-decoration: none; font-family: Poppins, sans-serif;">
+                        CONFIRM MY EMAIL
+                      </a>
+                    </div>
                     </td>
                   </tr>
                 </tbody>
@@ -41,7 +42,9 @@ module.exports = confirmAccountTemplate = (user) => {
                 <tbody>       
                   <tr style="text-align: center">
                     <td> 
-                      <p style="color: #999; margin-bottom: 0; font-family: Poppins, sans-serif;">Powered By Get Party!</p>
+                      <p style="color: #999; margin-bottom: 0; font-family: Poppins, sans-serif;">
+                        Powered By Get Party!
+                      </p>
                     </td>
                   </tr>
                 </tbody>

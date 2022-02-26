@@ -1,5 +1,8 @@
 const { AuthenticationError, PubSub } = require('apollo-server');
 const { PIN_ADDED, PIN_DELETED, PIN_UPDATED } = require('./constants/subscriptions');
+const confirmAccountTemplate = require('./handlers/confirmAccount');
+const sendMail = require('./config/email');
+const { v4: uuid } = require('uuid');
 
 const Pin = require('./models/Pin');
 const User = require('./models/User');
@@ -29,9 +32,9 @@ module.exports = {
         const user = await new User({
           ...args.input,
           isActive: false,
-          token: '',
+          token: uuid(),
         }).save();
-        // Enviar Mail con Token.
+        await sendMail(confirmAccountTemplate(user));
         return user;
       } catch (error) {
         if (error && error.code === 11000) {
@@ -42,13 +45,12 @@ module.exports = {
     },
     confirmAccount: async (root, args, ctx) => {
       try {
-        const token = args.input.token;
-        const user = await User.findOneAndUpdate({ token }, { isActive: true, token: '' });
+        const { token } = args.input;
+        console.log(token);
+        const user = await User.findOneAndUpdate({ token }, { isActive: true, token: '' }, { new: true });
+        if (!user) throw new Error('Invalid token.');
         return user;
       } catch (error) {
-        if (error && error.code === 11000) {
-          throw new Error('User with email already exists.');
-        }
         throw new Error(error);
       }
     },

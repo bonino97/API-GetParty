@@ -18,7 +18,7 @@ const transport = nodemailer.createTransport({
 module.exports = sendMail = async (options) => {
   try {
     const emailOptions = {
-      from: `GetParty <no-reply@getparty.app>`,
+      from: `Get Party! <no-reply@getparty.app>`,
       to: options.user.email,
       subject: options.subject,
       html: options.html,
