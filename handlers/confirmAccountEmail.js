@@ -28,10 +28,10 @@ module.exports = confirmAccountTemplate = (user) => {
                     "> 
                     Welcome to Get Party!
                     </h1> 
-                    <p style="font-family: Poppins, sans-serif;">Click, "CONFIRM MY EMAIL" to validate your account. </p>
+                    <p style="font-family: Poppins, sans-serif;">Click, "CONFIRM EMAIL" to validate your account. </p>
                     <div class="text-center">
                       <a href="${url}" style="padding: 10px; background-color: #FD991B; color: #fff; display: inline-block; border-radius: 4px; margin-bottom: 18px; text-decoration: none; font-family: Poppins, sans-serif;">
-                        CONFIRM MY EMAIL
+                        Confirm Email
                       </a>
                     </div>
                     </td>

@@ -6,10 +6,12 @@ const { PIN_ADDED, PIN_DELETED, PIN_UPDATED } = require('./constants/subscriptio
 
 const sendMail = require('./config/email');
 const signJWTAsync = require('./functions/signJWT');
-const confirmAccountTemplate = require('./handlers/confirmAccount');
 
 const Pin = require('./models/Pin');
 const User = require('./models/User');
+
+const confirmAccountTemplate = require('./handlers/confirmAccountEmail');
+const resetPasswordTemplate = require('./handlers/resetPasswordEmail');
 
 const pubsub = new PubSub();
 
@@ -55,7 +57,7 @@ module.exports = {
     confirmAccount: async (root, args, ctx) => {
       try {
         const { token } = args.input;
-        const user = await User.findOneAndUpdate({ token }, { isActive: true, token: '' }, { new: true });
+        const user = await User.findOneAndUpdate({ token }, { isActive: true, token: '' }, { new: true }).exec();
         if (!user) throw new Error('Invalid token.');
         return user;
       } catch (error) {
@@ -77,8 +79,29 @@ module.exports = {
         throw new Error(error);
       }
     },
-    forgotPassword: async (root, args, ctx) => {},
-    resetPassword: async (root, args, ctx) => {},
+    forgotPassword: async (root, args, ctx) => {
+      try {
+        const { email } = args.input;
+        const user = await User.findOneAndUpdate({ email }, { token: uuid() }, { new: true }).exec();
+        if (!user) throw new Error('Email not found.');
+        await sendMail(resetPasswordTemplate(user));
+        return user;
+      } catch (error) {
+        throw new Error(error);
+      }
+    },
+    resetPassword: async (root, args, ctx) => {
+      try {
+        const { token, password } = args.input;
+        console.log(args.input)
+        const newPassword = await bcrypt.hash(password, SALT_ROUNDS);
+        const user = await User.findOneAndUpdate({ token }, { isActive: true, token: '', password: newPassword }, { new: true }).exec();
+        if (!user) throw new Error('Token not found.');
+        return user;
+      } catch (error) {
+        throw new Error(error);
+      }
+    },
     createPin: authenticated(async (root, args, ctx) => {
       try {
         const newPin = await new Pin({

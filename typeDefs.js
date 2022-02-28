@@ -113,7 +113,8 @@ module.exports = gql`
   }
 
   input ResetPasswordInput {
-    code: Float
+    password: String
+    token: String
   }
 
   input ConfirmAccountInput {
