@@ -93,7 +93,6 @@ module.exports = {
     resetPassword: async (root, args, ctx) => {
       try {
         const { token, password } = args.input;
-        console.log(args.input)
         const newPassword = await bcrypt.hash(password, SALT_ROUNDS);
         const user = await User.findOneAndUpdate({ token }, { isActive: true, token: '', password: newPassword }, { new: true }).exec();
         if (!user) throw new Error('Token not found.');
