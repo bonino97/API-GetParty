@@ -121,6 +121,10 @@ module.exports = gql`
     token: String
   }
 
+  input GetPinBySlugInput {
+    slug: String
+  }
+
   type Location {
     address: String
     city: String
@@ -139,6 +143,7 @@ module.exports = gql`
     me: User
     getPins: [Pin!]!
     getPin: Pin!
+    getPinBySlug(input: GetPinBySlugInput): Pin!
   }
 
   type Mutation {
