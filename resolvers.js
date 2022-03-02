@@ -37,7 +37,7 @@ module.exports = {
     },
     getPinBySlug: async (root, args, ctx) => {
       const { slug } = args?.input;
-      const pin = await Pin.findOne({ slug });
+      const pin = await Pin.findOne({ slug }).populate('author').populate('comments.author');
       if (!pin) throw new Error(`Pin url doesn't exists.`);
       return pin;
     },
