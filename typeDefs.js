@@ -58,6 +58,32 @@ module.exports = gql`
     attendees: [User]
     followers: [User]
     comments: [Comments]
+
+    tickets: [Tickets]
+  }
+
+  type Tickets {
+    ticketId: Float
+    quantity: Float
+    price: Float
+    description: String
+    title: String
+    createdAt: Date
+    updatedAt: Date
+  }
+
+  type Location {
+    address: String
+    city: String
+    state: String
+    zipCode: String
+    country: String
+  }
+
+  type Comments {
+    text: String
+    author: User
+    createdAt: String
   }
 
   input CreatePinInput {
@@ -86,6 +112,16 @@ module.exports = gql`
 
     latitude: Float
     longitude: Float
+
+    tickets: [TicketsInput]
+  }
+
+  input TicketsInput {
+    ticketId: Float
+    quantity: Float
+    price: Float
+    description: String
+    title: String
   }
 
   input LocationInput {
@@ -123,20 +159,6 @@ module.exports = gql`
 
   input GetPinBySlugInput {
     slug: String
-  }
-
-  type Location {
-    address: String
-    city: String
-    state: String
-    zipCode: String
-    country: String
-  }
-
-  type Comments {
-    text: String
-    author: User
-    createdAt: String
   }
 
   type Query {

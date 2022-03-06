@@ -21,8 +21,6 @@ const PinSchema = mongoose.Schema(
       country: String,
     },
 
-    availableTickets: Number,
-    priceOfTicket: Number,
     takeFees: Boolean,
 
     isPeriodic: Boolean,
@@ -72,6 +70,17 @@ const PinSchema = mongoose.Schema(
           required: true,
           ref: 'User',
         },
+      },
+    ],
+    tickets: [
+      {
+        ticketId: Number,
+        quantity: Number,
+        price: Number,
+        description: String,
+        title: String,
+        createdAt: { type: Date, default: Date.now },
+        updatedAt: { type: Date, default: Date.now },
       },
     ],
   },
