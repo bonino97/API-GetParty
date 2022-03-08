@@ -74,8 +74,9 @@ module.exports = {
     login: async (root, args, ctx) => {
       try {
         const { email, password } = args.input;
-        const user = await User.findOne({ email, isActive: true });
-        if (!user) throw new Error('Please, confirm your account.');
+        const user = await User.findOne({ email });
+        if (!user) throw new Error('User not found.');
+        if (!user?.isActive) throw new Error('Please, confirm your account.');
         const compare = bcrypt.compareSync(password, user?.password);
         if (!compare) throw new Error('Incorrect password, try again, or sign in with google.');
         const jwt = await signJWTAsync(user);
